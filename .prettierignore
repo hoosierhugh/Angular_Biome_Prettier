@@ -1,0 +1,4 @@
+# Prettier is scoped to Angular templates only.
+# Biome owns .ts/.js/.json/.css formatting — see biome.json.
+*
+!**/*.html

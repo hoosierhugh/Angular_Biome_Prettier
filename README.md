@@ -1,59 +1,27 @@
-# Counter
+# Angular (22+) + Biome + Prettier Set Up
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.5.
+If you want to avoid ESLint hell, this is a working setup for Angular 22+ projects that uses Biome for linting/formatting TS/JS/JSON/CSS and Prettier for formatting HTML templates.
 
-## Development server
+## Why Biome + Prettier?
 
-To start a local development server, run:
+Split by file type — each tool owns different files, no overlap:
 
-```bash
-ng serve
-```
+Biome (biome.json) — handles .ts/.js/.json/.css:
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Formatting: single quotes, 100-char line width, 2-space indent, trailing commas, always-semicolons (matches the project's old Prettier style)
+Linting: recommended rule set
+Import organizing on save/check
+Explicitly disabled for **/*.html via an override
+Prettier (.prettierrc + .prettierignore) — handles .html only:
 
-## Code scaffolding
+Uses the angular parser so it understands Angular template syntax (*ngIf, @if/@for, bindings, interpolation) that Biome's HTML formatter doesn't parse correctly
+.prettierignore blocks it from touching anything else (* then !**/*.html)
+Scripts in package.json:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+lint / lint:fix — Biome lint
+format — Biome format + Prettier (in sequence) → covers the whole codebase
+format:check — same, non-destructive check mode
+check — Biome's combined lint+format+import-organize in one pass
+Editor integration (.vscode/settings.json): Biome is the default formatter; .html files are routed to Prettier specifically. Format-on-save is on for both.
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Why split instead of one tool: Biome is fast and covers TS/JS/JSON/CSS well, but has no Angular-template awareness — Prettier remains the only option there.
